@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>हिंदी साहित्य पुस्तकालय - Hindi Sahitya Library</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Hind:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Add this in the head section -->
+    <script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
+    <script>
+      google.books.load();
+    </script>
+
+    <!-- Add this modal for book preview -->
+    <div id="bookPreviewModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="viewerCanvas"></div>
+      </div>
+    </div>
+    <!-- Add this before the closing </body> tag -->
+    <div class="chatbot-container">
+      <div class="chatbot-header">
+        <h3>हिंदी सहायक</h3>
+        <button class="close-chatbot">&times;</button>
+      </div>
+      <div class="chatbot-messages"></div>
+      <div class="chatbot-input">
+        <input type="text" placeholder="अपना प्रश्न पूछें...">
+        <button class="send-btn">भेजें</button>
+      </div>
+    </div>
+    <button class="chatbot-toggler">
+      <i class="fas fa-comments"></i>
+    </button>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>हिंदी साहित्य पुस्तकालय</h1>
+                <p>Hindi Sahitya Library</p>
+            </div>
+            <nav>
+                <ul>
+                    <li class="dropdown">
+                        <a href="#home">मुख्य पृष्ठ</a>
+                        <div class="dropdown-content">
+                            <a href="#featured-books">विशेष पुस्तकें</a>
+                            <a href="#popular-books">लोकप्रिय पुस्तकें</a>
+                            <a href="#new-arrivals">नए संग्रह</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#categories">श्रेणियाँ</a>
+                        <div class="dropdown-content">
+                            <a href="#categories">उपन्यास</a>
+                            <a href="#categories">नाटक</a>
+                            <a href="#categories">कविता</a>
+                            <a href="#categories">कहानियाँ</a>
+                            <a href="#categories">इतिहास</a>
+                            <a href="#categories">शैक्षिक</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#authors">लेखक</a>
+                        <div class="dropdown-content">
+                            <a href="#authors">प्रेमचंद</a>
+                            <a href="#authors">महादेवी वर्मा</a>
+                            <a href="#authors">रामधारी सिंह दिनकर</a>
+                            <a href="#authors">सूर्यकांत त्रिपाठी निराला</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#new-arrivals">नए संग्रह</a>
+                        <div class="dropdown-content">
+                            <a href="#new-arrivals">इस सप्ताह</a>
+                            <a href="#new-arrivals">इस महीने</a>
+                            <a href="#new-arrivals">पिछले 3 महीने</a>
+                        </div>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#about">हमारे बारे में</a>
+                        <div class="dropdown-content">
+                            <a href="#about">परिचय</a>
+                            <a href="#about">संपर्क</a>
+                            <a href="#about">सहयोग</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            <div class="search-bar">
+                <input type="text" placeholder="पुस्तक या लेखक खोजें...">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h2>हिंदी साहित्य की दुनिया में आपका स्वागत है</h2>
+                <p>प्रसिद्ध हिंदी कहानियों, उपन्यासों और नाटकों का विशाल संग्रह</p>
+                <button class="cta-button">पुस्तकालय देखें</button>
+            </div>
+            <div class="featured-books">
+                <!-- Featured books carousel will go here -->
+                <div class="book-carousel">
+                    <div class="book">
+                        <img src="https://th.bing.com/th/id/OIP.ZbaadMZsO-l2lySDhtzOUwHaLw?rs=1&pid=ImgDetMain" alt="गोदान">
+                        <h3>गोदान</h3>
+                        <p>प्रेमचंद</p>
+                    </div>
+                    <div class="book">
+                        <img src="https://th.bing.com/th/id/OIP.ZuV-9j0D9xdNIUc2gCXEugHaLk?rs=1&pid=ImgDetMain" alt="नीला चाँद">
+                        <h3>नीला चाँद</h3>
+                        <p>शिवानी</p>
+                    </div>
+                    <div class="book">
+                        <img src="https://m.media-amazon.com/images/I/41YVKRgoZbL.jpg" alt="मैला आँचल">
+                        <h3>मैला आँचल</h3>
+                        <p>फणीश्वरनाथ रेणु</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categories">
+        <div class="container">
+            <h2 class="section-title">श्रेणियाँ</h2>
+            <div class="category-grid">
+                <div class="category">
+                    <i class="fas fa-book"></i>
+                    <h3>उपन्यास</h3>
+                </div>
+                <div class="category">
+                    <i class="fas fa-theater-masks"></i>
+                    <h3>नाटक</h3>
+                </div>
+                <div class="category">
+                    <i class="fas fa-feather-alt"></i>
+                    <h3>कविता</h3>
+                </div>
+                <div class="category">
+                    <i class="fas fa-book-open"></i>
+                    <h3>कहानियाँ</h3>
+                </div>
+                <div class="category">
+                    <i class="fas fa-landmark"></i>
+                    <h3>इतिहास</h3>
+                </div>
+                <div class="category">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>शैक्षिक</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Authors Section -->
+    <section class="authors" id="authors">
+        <div class="container">
+            <h2 class="section-title">प्रमुख लेखक</h2>
+            <div class="author-grid">
+                <!-- In the Featured Authors Section -->
+                <div class="author">
+                    <a href="https://hi.wikipedia.org/wiki/%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A5%87%E0%A4%AE%E0%A4%9A%E0%A4%82%E0%A4%A6">
+                        <img src="https://images.news18.com/ibnkhabar/uploads/2022/07/Munshi-Premchand-News.jpg" alt="प्रेमचंद">
+                    </a>
+                    <h3>प्रेमचंद</h3>
+                </div>
+                    <p>उपन्यास सम्राट</p>
+                </div>
+                <div class="author">
+                    <a href="https://hi.wikipedia.org/wiki/%E0%A4%AE%E0%A4%B9%E0%A4%BE%E0%A4%A6%E0%A5%87%E0%A4%B5%E0%A5%80_%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%AE%E0%A4%BE" target="_blank"> <!-- Optional: target="_blank" to open in a new tab -->
+                        <img src="https://www.thefamouspeople.com/profiles/images/mahadevi-varma-1.jpg" alt="महादेवी वर्मा">
+                    </a>
+                    <h3>महादेवी वर्मा</h3>
+                </div>
+                    <p>आधुनिक मीरा</p>
+                </div>
+                <div class="author">
+                    <a href="https://hi.wikipedia.org/wiki/%E0%A4%B0%E0%A4%BE%E0%A4%AE%E0%A4%A7%E0%A4%BE%E0%A4%B0%E0%A5%80_%E0%A4%B8%E0%A4%BF%E0%A4%82%E0%A4%B9_%27%E0%A4%A6%E0%A4%BF%E0%A4%A8%E0%A4%95%E0%A4%B0%27" target="_blank"> <!-- Optional: target="_blank" to open in a new tab -->
+                        <img src="https://filmyfocus.com/wp-content/uploads/2023/08/Profile1-50.png" alt="रामधारी सिंह दिनकर">
+                    </a>
+                    <h3>रामधारी सिंह दिनकर</h3>
+                </div>
+                    <p>राष्ट्रकवि</p>
+                </div>
+                <div class="author">
+                    <a href="https://hi.wikipedia.org/wiki/%E0%A4%B8%E0%A5%82%E0%A4%B0%E0%A5%8D%E0%A4%AF%E0%A4%95%E0%A4%BE%E0%A4%A8%E0%A5%8D%E0%A4%A4_%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A4%BF%E0%A4%AA%E0%A4%BE%E0%A4%A0%E0%A5%80_%27%E0%A4%A8%E0%A4%BF%E0%A4%B0%E0%A4%BE%E0%A4%B2%E0%A4%BE%27" target="_blank"> <!-- Optional: target="_blank" to open in a new tab -->
+                        <img src="https://th.bing.com/th/id/OIP.Ld0XkISyFTetf8bvXo2RGAAAAA?w=400&h=400&rs=1&pid=ImgDetMain" alt="सूर्यकांत त्रिपाठी निराला">
+                    </a>
+                    <h3>सूर्यकांत त्रिपाठी निराला</h3>
+                </div>
+                    <p>छायावादी कवि</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Books Section -->
+    <section class="popular-books">
+        <div class="container">
+            <h2 class="section-title">लोकप्रिय पुस्तकें</h2>
+            <div class="book-grid">
+                <div class="book">
+                    <img src="https://th.bing.com/th/id/OIP.UHaixI3SPB7ydbY6SvNpswHaHa?rs=1&pid=ImgDetMain" alt="गबन">
+                    <h3>गबन</h3>
+                    <p>प्रेमचंद</p>
+                </div>
+                <div class="book">
+                    <img src="https://m.media-amazon.com/images/I/81T+HY7ZlzL._SL1500_.jpg" alt="कामायनी">
+                    <h3>कामायनी</h3>
+                    <p>जयशंकर प्रसाद</p>
+                </div>
+                <div class="book">
+                    <img src="https://m.media-amazon.com/images/I/81aCa8OAqNL.jpg" alt="रश्मिरथी">
+                    <h3>रश्मिरथी</h3>
+                    <p>रामधारी सिंह दिनकर</p>
+                </div>
+                <div class="book">
+                    <img src="https://cdn.exoticindia.com/images/products/original/books/nza861.jpg" alt="अंधेर नगरी">
+                    <h3>अंधेर नगरी</h3>
+                    <p>भारतेंदु हरिश्चंद्र</p>
+                </div>
+                <div class="book">
+                    <img src="https://images-na.ssl-images-amazon.com/images/I/515yJJgnPwL._SY445_QL70_ML2_.jpg" alt="चंद्रकांता">
+                    <h3>चंद्रकांता</h3>
+                    <p>देवकीनंदन खत्री</p>
+                </div>
+                <div class="book">
+                    <img src="https://m.media-amazon.com/images/I/91M7FgOB9gL._SL1500_.jpg" alt="गुनाहों का देवता">
+                    <h3>गुनाहों का देवता</h3>
+                    <p>धर्मवीर भारती</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Arrivals Section -->
+    <section class="new-arrivals" id="new-arrivals">
+        <div class="container">
+            <h2 class="section-title">नए संग्रह</h2>
+            <div class="book-carousel">
+                <!-- Example book card with image -->
+                <div class="book">
+                  <img src="https://www.theindianbookstore.in/cdn/shop/files/image-003_1b4d3478-811e-447e-8858-dfdb02788e2b.png?v=1694542369" alt="गोदान" class="book-cover">
+                  <h3>गोदान</h3>
+                  <p>प्रेमचंद</p>
+                  <button class="preview-btn">पूर्वावलोकन</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section -->
+    <footer id="about">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section about">
+                    <h3>हमारे बारे में</h3>
+                    <p>हिंदी साहित्य पुस्तकालय हिंदी साहित्य के प्रेमियों के लिए एक डिजिटल मंच है। यहाँ आपक प्रसिद्ध हिंदी लेखकों की रचनाओं का आनंद ले सकते हैं।</p>
+                </div>
+                <div class="footer-section links">
+                    <h3>त्वरित लिंक</h3>
+                    <ul>
+                        <li><a href="#home">मुख्य पृष्ठ</a></li>
+                        <li><a href="#categories">श्रेणियाँ</a></li>
+                        <li><a href="#authors">लेखक</a></li>
+                        <li><a href="#new-arrivals">नए संग्रह</a></li>
+                        <li><a href="#about">हमारे बारे में</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section contact">
+                    <h3>संपर्क करें</h3>
+                    <p><i class="fas fa-envelope"></i> info@hindisahityalibrary.com</p>
+                    <p><i class="fas fa-phone"></i> +91 1234567890</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 हिंदी साहित्य पुस्तकालय | सर्वाधिकार सुरक्षित</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

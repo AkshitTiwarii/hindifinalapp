@@ -1,0 +1,16 @@
+Additional libraries for enhanced 3D effects:
+
+1. Three.js - For advanced 3D rendering
+   npm install three
+
+2. GSAP (GreenSock Animation Platform) - For smooth animations
+   npm install gsap
+
+3. Tilt.js - For easy 3D tilt effects
+   npm install vanilla-tilt
+
+4. Particles.js - For background particle effects
+   npm install particles.js
+
+5. ScrollReveal - For scroll-based animations
+   npm install scrollreveal
