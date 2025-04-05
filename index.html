@@ -1,302 +1,411 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>हिंदी साहित्य पुस्तकालय - Hindi Sahitya Library</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Enhanced Hindi Learning App</title>
+    <!-- Google Books API -->
+    <script src="https://www.google.com/books/jsapi.js"></script>
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Hind:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Add this in the head section -->
-    <script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
-    <script>
-      google.books.load();
-    </script>
-
-    <!-- Add this modal for book preview -->
-    <div id="bookPreviewModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <div id="viewerCanvas"></div>
-      </div>
-    </div>
-    <!-- Add this before the closing </body> tag -->
-    <div class="chatbot-container">
-      <div class="chatbot-header">
-        <h3>हिंदी सहायक</h3>
-        <button class="close-chatbot">&times;</button>
-      </div>
-      <div class="chatbot-messages"></div>
-      <div class="chatbot-input">
-        <input type="text" placeholder="अपना प्रश्न पूछें...">
-        <button class="send-btn">भेजें</button>
-      </div>
-    </div>
-    <button class="chatbot-toggler">
-      <i class="fas fa-comments"></i>
-    </button>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --bg-color: #f5f7fa;
+            --text-color: #333;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.5s ease;
+            overflow-x: hidden;
+        }
+        
+        /* Ambient background animation */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .ambient-bg span {
+            position: absolute;
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: rgba(74, 111, 165, 0.1);
+            animation: animate 15s linear infinite;
+            bottom: -150px;
+        }
+        
+        .ambient-bg span:nth-child(1) {
+            left: 25%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 0s;
+        }
+        
+        .ambient-bg span:nth-child(2) {
+            left: 10%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+        }
+        
+        .ambient-bg span:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+        
+        .ambient-bg span:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+        }
+        
+        .ambient-bg span:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+        
+        .ambient-bg span:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+        }
+        
+        .ambient-bg span:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+        
+        .ambient-bg span:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+        
+        .ambient-bg span:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+        }
+        
+        .ambient-bg span:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
+        
+        @keyframes animate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+        
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        
+        /* Header styles */
+        header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        /* Search section */
+        .search-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .search-box {
+            display: flex;
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .search-box input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .search-box button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .search-box button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        /* Book viewer */
+        #viewerCanvas {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        /* Features section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-card i {
+            font-size: 2rem;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        /* Theme toggle */
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        
+        /* Dark mode styles */
+        body.dark-mode {
+            --bg-color: #121212;
+            --text-color: #f5f5f5;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        body.dark-mode .container {
+            background-color: rgba(30, 30, 30, 0.9);
+        }
+        
+        body.dark-mode .feature-card {
+            background: #1e1e1e;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin-top: 15px;
+            }
+            
+            #viewerCanvas {
+                height: 400px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Header Section -->
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1>हिंदी साहित्य पुस्तकालय</h1>
-                <p>Hindi Sahitya Library</p>
+    <!-- Ambient background effect -->
+    <div class="ambient-bg">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    
+    <!-- Theme toggle button -->
+    <div class="theme-toggle" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-language"></i> Hindi Learning App</h1>
+            <p>Enhance your Hindi skills with interactive lessons and resources</p>
+        </header>
+        
+        <section class="search-section">
+            <div class="search-box">
+                <input type="text" id="bookSearch" placeholder="Search for Hindi learning books...">
+                <button id="searchButton"><i class="fas fa-search"></i> Search</button>
             </div>
-            <nav>
-                <ul>
-                    <li class="dropdown">
-                        <a href="#home">मुख्य पृष्ठ</a>
-                        <div class="dropdown-content">
-                            <a href="#featured-books">विशेष पुस्तकें</a>
-                            <a href="#popular-books">लोकप्रिय पुस्तकें</a>
-                            <a href="#new-arrivals">नए संग्रह</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#categories">श्रेणियाँ</a>
-                        <div class="dropdown-content">
-                            <a href="#categories">उपन्यास</a>
-                            <a href="#categories">नाटक</a>
-                            <a href="#categories">कविता</a>
-                            <a href="#categories">कहानियाँ</a>
-                            <a href="#categories">इतिहास</a>
-                            <a href="#categories">शैक्षिक</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#authors">लेखक</a>
-                        <div class="dropdown-content">
-                            <a href="#authors">प्रेमचंद</a>
-                            <a href="#authors">महादेवी वर्मा</a>
-                            <a href="#authors">रामधारी सिंह दिनकर</a>
-                            <a href="#authors">सूर्यकांत त्रिपाठी निराला</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#new-arrivals">नए संग्रह</a>
-                        <div class="dropdown-content">
-                            <a href="#new-arrivals">इस सप्ताह</a>
-                            <a href="#new-arrivals">इस महीने</a>
-                            <a href="#new-arrivals">पिछले 3 महीने</a>
-                        </div>
-                    </li>
-                    <li class="dropdown">
-                        <a href="#about">हमारे बारे में</a>
-                        <div class="dropdown-content">
-                            <a href="#about">परिचय</a>
-                            <a href="#about">संपर्क</a>
-                            <a href="#about">सहयोग</a>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-            <div class="search-bar">
-                <input type="text" placeholder="पुस्तक या लेखक खोजें...">
-                <button><i class="fas fa-search"></i></button>
+        </section>
+        
+        <div id="viewerCanvas"></div>
+        
+        <section class="features">
+            <div class="feature-card">
+                <i class="fas fa-book-open"></i>
+                <h3>Interactive Lessons</h3>
+                <p>Learn Hindi through engaging, interactive lessons tailored to your level.</p>
             </div>
-        </div>
-    </header>
+            <div class="feature-card">
+                <i class="fas fa-headphones"></i>
+                <h3>Audio Pronunciations</h3>
+                <p>Listen to native speakers pronounce words and phrases correctly.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-tasks"></i>
+                <h3>Progress Tracking</h3>
+                <p>Track your learning progress and see how much you've improved.</p>
+            </div>
+        </section>
+    </div>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <h2>हिंदी साहित्य की दुनिया में आपका स्वागत है</h2>
-                <p>प्रसिद्ध हिंदी कहानियों, उपन्यासों और नाटकों का विशाल संग्रह</p>
-                <button class="cta-button">पुस्तकालय देखें</button>
-            </div>
-            <div class="featured-books">
-                <!-- Featured books carousel will go here -->
-                <div class="book-carousel">
-                    <div class="book">
-                        <img src="https://th.bing.com/th/id/OIP.ZbaadMZsO-l2lySDhtzOUwHaLw?rs=1&pid=ImgDetMain" alt="गोदान">
-                        <h3>गोदान</h3>
-                        <p>प्रेमचंद</p>
-                    </div>
-                    <div class="book">
-                        <img src="https://th.bing.com/th/id/OIP.ZuV-9j0D9xdNIUc2gCXEugHaLk?rs=1&pid=ImgDetMain" alt="नीला चाँद">
-                        <h3>नीला चाँद</h3>
-                        <p>शिवानी</p>
-                    </div>
-                    <div class="book">
-                        <img src="https://m.media-amazon.com/images/I/41YVKRgoZbL.jpg" alt="मैला आँचल">
-                        <h3>मैला आँचल</h3>
-                        <p>फणीश्वरनाथ रेणु</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Categories Section -->
-    <section class="categories" id="categories">
-        <div class="container">
-            <h2 class="section-title">श्रेणियाँ</h2>
-            <div class="category-grid">
-                <div class="category">
-                    <i class="fas fa-book"></i>
-                    <h3>उपन्यास</h3>
-                </div>
-                <div class="category">
-                    <i class="fas fa-theater-masks"></i>
-                    <h3>नाटक</h3>
-                </div>
-                <div class="category">
-                    <i class="fas fa-feather-alt"></i>
-                    <h3>कविता</h3>
-                </div>
-                <div class="category">
-                    <i class="fas fa-book-open"></i>
-                    <h3>कहानियाँ</h3>
-                </div>
-                <div class="category">
-                    <i class="fas fa-landmark"></i>
-                    <h3>इतिहास</h3>
-                </div>
-                <div class="category">
-                    <i class="fas fa-graduation-cap"></i>
-                    <h3>शैक्षिक</h3>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Authors Section -->
-    <section class="authors" id="authors">
-        <div class="container">
-            <h2 class="section-title">प्रमुख लेखक</h2>
-            <div class="author-grid">
-                <!-- In the Featured Authors Section -->
-                <div class="author">
-                    <a href="https://hi.wikipedia.org/wiki/%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A5%87%E0%A4%AE%E0%A4%9A%E0%A4%82%E0%A4%A6">
-                        <img src="https://images.news18.com/ibnkhabar/uploads/2022/07/Munshi-Premchand-News.jpg" alt="प्रेमचंद">
-                    </a>
-                    <h3>प्रेमचंद</h3>
-                </div>
-                    <p>उपन्यास सम्राट</p>
-                </div>
-                <div class="author">
-                    <a href="https://hi.wikipedia.org/wiki/%E0%A4%AE%E0%A4%B9%E0%A4%BE%E0%A4%A6%E0%A5%87%E0%A4%B5%E0%A5%80_%E0%A4%B5%E0%A4%B0%E0%A5%8D%E0%A4%AE%E0%A4%BE" target="_blank"> <!-- Optional: target="_blank" to open in a new tab -->
-                        <img src="https://www.thefamouspeople.com/profiles/images/mahadevi-varma-1.jpg" alt="महादेवी वर्मा">
-                    </a>
-                    <h3>महादेवी वर्मा</h3>
-                </div>
-                    <p>आधुनिक मीरा</p>
-                </div>
-                <div class="author">
-                    <a href="https://hi.wikipedia.org/wiki/%E0%A4%B0%E0%A4%BE%E0%A4%AE%E0%A4%A7%E0%A4%BE%E0%A4%B0%E0%A5%80_%E0%A4%B8%E0%A4%BF%E0%A4%82%E0%A4%B9_%27%E0%A4%A6%E0%A4%BF%E0%A4%A8%E0%A4%95%E0%A4%B0%27" target="_blank"> <!-- Optional: target="_blank" to open in a new tab -->
-                        <img src="https://filmyfocus.com/wp-content/uploads/2023/08/Profile1-50.png" alt="रामधारी सिंह दिनकर">
-                    </a>
-                    <h3>रामधारी सिंह दिनकर</h3>
-                </div>
-                    <p>राष्ट्रकवि</p>
-                </div>
-                <div class="author">
-                    <a href="https://hi.wikipedia.org/wiki/%E0%A4%B8%E0%A5%82%E0%A4%B0%E0%A5%8D%E0%A4%AF%E0%A4%95%E0%A4%BE%E0%A4%A8%E0%A5%8D%E0%A4%A4_%E0%A4%A4%E0%A5%8D%E0%A4%B0%E0%A4%BF%E0%A4%AA%E0%A4%BE%E0%A4%A0%E0%A5%80_%27%E0%A4%A8%E0%A4%BF%E0%A4%B0%E0%A4%BE%E0%A4%B2%E0%A4%BE%27" target="_blank"> <!-- Optional: target="_blank" to open in a new tab -->
-                        <img src="https://th.bing.com/th/id/OIP.Ld0XkISyFTetf8bvXo2RGAAAAA?w=400&h=400&rs=1&pid=ImgDetMain" alt="सूर्यकांत त्रिपाठी निराला">
-                    </a>
-                    <h3>सूर्यकांत त्रिपाठी निराला</h3>
-                </div>
-                    <p>छायावादी कवि</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Popular Books Section -->
-    <section class="popular-books">
-        <div class="container">
-            <h2 class="section-title">लोकप्रिय पुस्तकें</h2>
-            <div class="book-grid">
-                <div class="book">
-                    <img src="https://th.bing.com/th/id/OIP.UHaixI3SPB7ydbY6SvNpswHaHa?rs=1&pid=ImgDetMain" alt="गबन">
-                    <h3>गबन</h3>
-                    <p>प्रेमचंद</p>
-                </div>
-                <div class="book">
-                    <img src="https://m.media-amazon.com/images/I/81T+HY7ZlzL._SL1500_.jpg" alt="कामायनी">
-                    <h3>कामायनी</h3>
-                    <p>जयशंकर प्रसाद</p>
-                </div>
-                <div class="book">
-                    <img src="https://m.media-amazon.com/images/I/81aCa8OAqNL.jpg" alt="रश्मिरथी">
-                    <h3>रश्मिरथी</h3>
-                    <p>रामधारी सिंह दिनकर</p>
-                </div>
-                <div class="book">
-                    <img src="https://cdn.exoticindia.com/images/products/original/books/nza861.jpg" alt="अंधेर नगरी">
-                    <h3>अंधेर नगरी</h3>
-                    <p>भारतेंदु हरिश्चंद्र</p>
-                </div>
-                <div class="book">
-                    <img src="https://images-na.ssl-images-amazon.com/images/I/515yJJgnPwL._SY445_QL70_ML2_.jpg" alt="चंद्रकांता">
-                    <h3>चंद्रकांता</h3>
-                    <p>देवकीनंदन खत्री</p>
-                </div>
-                <div class="book">
-                    <img src="https://m.media-amazon.com/images/I/91M7FgOB9gL._SL1500_.jpg" alt="गुनाहों का देवता">
-                    <h3>गुनाहों का देवता</h3>
-                    <p>धर्मवीर भारती</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- New Arrivals Section -->
-    <section class="new-arrivals" id="new-arrivals">
-        <div class="container">
-            <h2 class="section-title">नए संग्रह</h2>
-            <div class="book-carousel">
-                <!-- Example book card with image -->
-                <div class="book">
-                  <img src="https://www.theindianbookstore.in/cdn/shop/files/image-003_1b4d3478-811e-447e-8858-dfdb02788e2b.png?v=1694542369" alt="गोदान" class="book-cover">
-                  <h3>गोदान</h3>
-                  <p>प्रेमचंद</p>
-                  <button class="preview-btn">पूर्वावलोकन</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer Section -->
-    <footer id="about">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section about">
-                    <h3>हमारे बारे में</h3>
-                    <p>हिंदी साहित्य पुस्तकालय हिंदी साहित्य के प्रेमियों के लिए एक डिजिटल मंच है। यहाँ आपक प्रसिद्ध हिंदी लेखकों की रचनाओं का आनंद ले सकते हैं।</p>
-                </div>
-                <div class="footer-section links">
-                    <h3>त्वरित लिंक</h3>
-                    <ul>
-                        <li><a href="#home">मुख्य पृष्ठ</a></li>
-                        <li><a href="#categories">श्रेणियाँ</a></li>
-                        <li><a href="#authors">लेखक</a></li>
-                        <li><a href="#new-arrivals">नए संग्रह</a></li>
-                        <li><a href="#about">हमारे बारे में</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section contact">
-                    <h3>संपर्क करें</h3>
-                    <p><i class="fas fa-envelope"></i> info@hindisahityalibrary.com</p>
-                    <p><i class="fas fa-phone"></i> +91 1234567890</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 हिंदी साहित्य पुस्तकालय | सर्वाधिकार सुरक्षित</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="js/script.js"></script>
+    <script>
+        // Initialize Google Books API
+        google.books.load();
+        
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const icon = themeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+        
+        // Book search functionality
+        document.getElementById('searchButton').addEventListener('click', searchBooks);
+        document.getElementById('bookSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchBooks();
+            }
+        });
+        
+        function searchBooks() {
+            const searchTerm = document.getElementById('bookSearch').value.trim();
+            if (!searchTerm) {
+                alert('Please enter a search term');
+                return;
+            }
+            
+            // You can replace this with actual ISBN fetching from Google Books API
+            // For demo purposes, we're using a placeholder ISBN
+            const placeholderISBNs = {
+                "hindi": "8126917856",
+                "learn hindi": "938022294X",
+                "hindi grammar": "8126917856",
+                "hindi vocabulary": "8194810976",
+                "hindi for beginners": "8126917856"
+            };
+            
+            const isbn = placeholderISBNs[searchTerm.toLowerCase()] || "8126917856";
+            
+            try {
+                const viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+                viewer.load(`ISBN:${isbn}`, bookNotFound, bookLoaded);
+            } catch (error) {
+                console.error("Error loading book viewer:", error);
+                alert("Error loading book viewer. Please try again.");
+            }
+        }
+        
+        function bookNotFound() {
+            alert("Book not found. Trying a default Hindi learning book instead.");
+            const viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+            viewer.load('ISBN:8126917856'); // Default Hindi learning book
+        }
+        
+        function bookLoaded() {
+            console.log("Book successfully loaded");
+        }
+        
+        // Initialize with a default book
+        window.addEventListener('load', () => {
+            try {
+                const viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+                viewer.load('ISBN:8126917856'); // Default Hindi learning book
+            } catch (error) {
+                console.error("Error initializing book viewer:", error);
+            }
+        });
+    </script>
 </body>
-</html>
+</html>   
